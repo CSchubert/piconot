@@ -1,0 +1,118 @@
+Team 2: Christine Schubert & Michael Culhane
+Piconot Work Diary
+
+--------------------------------------------
+
+Right off the bat, we realized that our ideal syntax won't work too well in
+Scala. In particular, our grammar relies upon indentation to indicate scope.
+Scala won't let us do that without curly braces, so we have revised our syntax
+to use curly braces, as follows:
+
+# This state represents Picobot in situation A.
+STATE 0 {
+	FREE DIRECTIONS: N, S
+	BLOCKED DIRECTIONS: E, W
+	MOVE DIRECTION: N
+	NEW STATE: 0
+
+	FREE DIRECTIONS: E
+	BLOCKED DIRECTIONS: W, N
+	MOVE DIRECTION: X
+	NEW STATE: 1
+}
+
+--------------------------------------------
+
+After thinking about this for a while, we ran into trouble with the closure
+after the state number. The issue was that the "free directions" and other
+functions were not declared in the scope of the State object, meaning that we
+couldn't easily write those functions inside the State class. Thus, it seemed
+that some sort of global state was necessary. Then, with our minds focused
+towards globals, we realized that State could be an independent function
+that sets a global state. This allows us to revert to syntax like the following
+(for now):
+
+# This state represents Picobot in situation A.
+STATE 0
+	FREE DIRECTIONS: N, S
+	BLOCKED DIRECTIONS: E, W
+	MOVE DIRECTION: N
+	NEW STATE: 0
+
+	FREE DIRECTIONS: E
+	BLOCKED DIRECTIONS: W, N
+	MOVE DIRECTION: X
+	NEW STATE: 1
+
+--------------------------------------------
+
+In order to make our syntax more friendly to Scala operators, we had to make
+some slight visual tweaks. In particular, we need to use parentheses to specify
+multiple arguments for the "free directions" and "blocked directions" functions.
+For consistency, though, we decided to use parentheses for all function calls.
+(We thought that consistency would be more clear for the user, and it is also
+simpler to implement.) In addition, we decided to change our multi-word function
+names into one-word camel case names, which are substantially easier for us to
+implement. These changes produce the following:
+
+# This state represents Picobot in situation A.
+State(0)
+	freeDirections(N, S)
+	blockedDirections(E, W)
+	moveDirection(N)
+	newState(0)
+
+	freeDirections(E)
+	blockedDirections(W, N)
+	moveDirection(X)
+	newState(1)
+
+--------------------------------------------
+
+We realized that using hashes would add unnecessary difficulty to our
+implementation. By changing comments from "#" to "//", we can take advantage
+of Scala's standard comments, which requires no implementation at all on our
+part. So, we've made that change, producing the following sample code:
+
+// This state represents Picobot in situation A.
+State(0)
+	freeDirections(N, S)
+	blockedDirections(E, W)
+	moveDirection(N)
+	newState(0)
+
+	freeDirections(E)
+	blockedDirections(W, N)
+	moveDirection(X)
+	newState(1)
+
+As a nice side effect, this also allows for in-line comments, which our
+ideal syntax did not support.
+
+--------------------------------------------
+
+It looks like we need some way for the user to specify a maze and kick off the
+program's execution. Our ideal grammar doesn't account for this, so we'll need
+to add something. We have considered two options. Either we can wrap the entire
+program in some sort of "Program" command, or we can create a command that
+allows the user to specify and run a maze with the already-defined rules. We
+chose the second option because (1) it won't add an additional level of nesting
+to our code and (2) it more logically separates the rules from the maze in which
+they will run. We found this second point particularly important because it's
+certainly conceivable that a user would define a set of rules that they want to
+use in several different mazes. So, we added a "runMaze" command, producing the
+following sample:
+
+// This state represents Picobot in situation A.
+State(0)
+	freeDirections(N, S)
+	blockedDirections(E, W)
+	moveDirection(N)
+	newState(0)
+
+	freeDirections(E)
+	blockedDirections(W, N)
+	moveDirection(X)
+	newState(1)
+
+runMaze("empty.txt")
