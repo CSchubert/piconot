@@ -3,6 +3,22 @@ Piconot Work Diary
 
 --------------------------------------------
 
+Our original syntax idea was:
+
+# This state represents Picobot in situation A.
+STATE 0:
+	FREE DIRECTIONS: N, S
+	BLOCKED DIRECTIONS: E, W
+	MOVE DIRECTION: N
+	NEW STATE: 0
+
+	FREE DIRECTIONS: E
+	BLOCKED DIRECTIONS: W, N
+	MOVE DIRECTION: X
+	NEW STATE: 1
+
+--------------------------------------------
+
 Right off the bat, we realized that our ideal syntax won't work too well in
 Scala. In particular, our grammar relies upon indentation to indicate scope.
 Scala won't let us do that without curly braces, so we have revised our syntax
@@ -116,3 +132,27 @@ State(0)
 	newState(1)
 
 runMaze("empty.txt")
+
+--------------------------------------------
+
+On a scale of 1–10 (where 10 is "a lot"), how much did you have to change 
+your syntax? 
+
+We think that on this scale, the changes that we made to our syntax would
+be around a 4. We did not have to make any drastic changes. We only had
+to change minor syntactical features such as adding parenthesis and 
+removing colons and spaces between words. We also had to add a little
+bit of scala-like stuff at the beginning of the file (e.g. imports) but
+the core of our DSL is very different from scala.
+
+
+On a scale of 1–10 (where 10 is "very difficult"), how difficult 
+was it to map your syntax to the semantics?
+
+We think that the implementation was a 5 on this scale. The structure of
+our code was difficult to think about and figure out, especially the 
+way in which we implemented the concept of states. Our original design
+used indentation to indicate scope which we were not able to do in our
+final design. However, we were able to figure out how to make the 
+syntax appear that it functioned this way after chewing on it a bit.
+
