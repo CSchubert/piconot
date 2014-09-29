@@ -28,28 +28,34 @@ import scala.collection.mutable.MutableList
 
 trait NewPiconot extends JFXApp {
   
-  var currentState: Int
-  var freeDirectionValues: Seq[MoveDirection]
-  var blockedDirectionValues: Seq[MoveDirection]
-  var moveDirectionValue: MoveDirection
-  var newStateValue: Int
+  var currentState: Int = 0
+  var freeDirectionValues: Seq[MoveDirection] = List()
+  var blockedDirectionValues: Seq[MoveDirection] = List()
+  var moveDirectionValue: MoveDirection = StayHere
+  var newStateValue: Int = 0
   
   var rules: List[Rule] = List()
+  
+  val N = North
+  val E = East
+  val S = South
+  val W = West
+  val X = StayHere
   
   def State(stateNumber: Int) = {
     currentState = stateNumber
   }
   
-  def freeDirections(directions: String*) = {
-    freeDirectionValues = directions map getDirectionForString
+  def freeDirections(directions: MoveDirection*) = {
+    freeDirectionValues = directions
   }
     
-  def blockedDirections(directions: String*) = {
-    blockedDirectionValues = directions map getDirectionForString
+  def blockedDirections(directions: MoveDirection*) = {
+    blockedDirectionValues = directions
   }
     
-  def moveDirection(direction: String) = {
-    moveDirectionValue = getDirectionForString(direction)
+  def moveDirection(direction: MoveDirection) = {
+    moveDirectionValue = direction
   }
   
   def newState(state: Int) = {
@@ -62,15 +68,6 @@ trait NewPiconot extends JFXApp {
     object MazeBot extends Picobot(maze, rules)
         with TextDisplay with GUIDisplay
     stage = MazeBot.mainStage
-  }
-  
-  def getDirectionForString(directionString: String): MoveDirection = {
-    directionString match {
-      case "N" => North
-      case "E" => East
-      case "W" => West
-      case "S" => South
-    }
   }
   
   def getRelativeDescription(direction: MoveDirection): RelativeDescription = {
